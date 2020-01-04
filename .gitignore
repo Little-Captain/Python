@@ -1,1 +1,6 @@
 **/desktop.ini
+**/.vscode/
+**/.venv/
+**/__pycache__/
+*.py
+*.txt
