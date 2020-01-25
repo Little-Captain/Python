@@ -46,17 +46,93 @@
 
 ### 测试关系
 
-The x in S operator tests to check whether object x equals any item in the sequence (or other kind of container or iterable) S. It returns True when it does and False when it doesn’t. The x not in S operator is equivalent to not (x in S). For dictionaries, x in S tests for the presence of x as a key. In the specific case of strings, though, x in S is more widely applicable; in this case, x in S tests whether x equals any substring of S, not just any single character.
+* `x in S` 用于测试`对象 x` 是否等于`序列 S` (或其他类型的容器或可迭代对象)中的任何`项`。x 在 S 中，返回 True，否则返回 False。
+
+* `x not in S` 等价于 `not (x in S)`。
+
+* 对于`字典`，`x in S` 测试 x 是否是 S 中`键`。
+
+* 对于`字符串`，`x in S` 测试 x 是否等于 S 的任何`子字符串`，而不仅是单个字符。
 
 ### 索引访问序列
 
-To denote the nth item of a sequence S, use an indexing: S[n]. Indexing is zerobased (S’s first item is S[0]). If S has L items, the index n may be 0, 1…up to and including L-1, but no larger. n may also be -1, -2…down to and including -L, but no smaller. A negative n (e.g., -1) denotes the same item in S as L+n (e.g., L + -1) does. In other words, S[-1], like S[L-1], is the last element of S, S[-2] is the nextto- last one, and so on.
-Using an index >=L or <-L raises an exception. Assigning to an item with an invalid index also raises an exception. You can add elements to a list, but to do so you assign to a slice, not an item, as we’ll discuss shortly.
+* 要表示序列 `S` 的第 `n` 项，可以使用索引：`S[n]`。
+
+* 索引从 `0` 开始(S 的`第一项`是 `S[0]`)。
+
+* 如果 `S 有 L 项`，则`索引 n` 可以为 `0、1 … 直至 L - 1(包括 L - 1)`，但`不能大于 L - 1`。
+
+* n 也可以是 `-1，-2 … 向下至 -L`，但`不能小于 -L`。负数 `n` (例如 -1)与 `L + n` (例如 L + (-1))表示 S 中`相同的项`的索引。换句话说，`S[L - 1]` 和 `S[-1]` 都是 S 的`最后一个元素`，`S[L - 2]` 和 `S[-2]` 都是 S 的`倒数第二个元素`，依此类推。
+
+* 当 `n < 0` 时，`n 索引` 等价于 `L + n 索引`
+
+```python
+x = [1, 2, 3, 4]
+x[1] # 2
+x[-1] # 4
+```
+
+* 索引 `>= L` 或 `< -L` 会引发`异常`。
 
 ### 切片访问序列
 
-To indicate a subsequence of S, you can use a slicing, with the syntax S[i:j], where i and j are integers. S[i:j] is the subsequence of S from the ith item, included, to the jth item, excluded. In Python, ranges always include the lower bound and exclude the upper bound. A slice is an empty subsequence when j is less than or equal to i, or when i is greater than or equal to L, the length of S. You can omit i when it is equal to 0, so that the slice begins from the start of S. You can omit j when it is greater than or equal to L, so that the slice extends all the way to the end of S. You can even omit both indices, to mean a shallow copy of the entire sequence: S[:]. Either or both indices may be less than 0.
-A negative index n in a slicing indicates the same spot in S as L+n, just like it does in an indexing. An index greater than or equal to L means the end of S, while a negative index less than or equal to -L means the start of S. Slicing can use the extended syntax S[i:j:k]. k is the stride of the slice, meaning the distance between successive indices. S[i:j] is equivalent to S[i:j:1], S[::2] is the subsequence of S that includes all items that have an even index in S, and S[::-1]5 has the same items as S, but in reverse order. With a negative stride, in order to have a nonempty slice, the second (“stop”) index needs to be smaller than the first (“start”) one—the reverse of the condition that must hold when the stride is positive. A stride of 0 raises an exception.
+* 在 Python 中，`范围`始终`包含下限(开始)`，而`排除上限(结束)`。
+
+* `切片中的负索引`与`索引中的负索引`意义相同。 即当 `n < 0(n 不能越界，如果越界，直接取边界值)` 时，`n 索引` 等价于 `L + n 索引`
+
+* 索引 `>= L` 表示 `S 的结尾`，负索引 `<= -L` 表示 `S 的开头`。
+
+* 要表示 S 的`子序列`，可以使用切片语法 `S[i:j]`，其中 i 和 j 是整数。
+
+  * `S[i:j]` 是 S 从`第 i 项(包括)`到`第 j 项(不包括)`的`子序列`。
+
+  * 当 `j <= i` 时，或当 `i >= L(S 的长度)` 时，`切片`是`空`的子`序列`。
+
+  * 可以在 `i == 0 时省略 i`(从 S 的第一项开始)。可以在 `j >= L 时省略 j`(到 S 的最后一项结束)。可以同时`省略 i j 两个索引`，切片结果表示 `S 的浅拷贝`：S[:]。
+
+* 切片的完备语法 `S[i:j:k]`。`k` 是切片的`跨度`，表示`连续索引`之间的`距离`。
+
+  * `重点：` `S[i:j]` 等价于 `S[i:j:1]`。
+
+  * `重点：` `未给出 i` 的情况下：当 `k > 0` 时，`i 取 0`；当 `k < 0` 时，`i 取 -1`。
+
+  * `重点：` 在切片中 `i` `j` 可以取`任意`的`整数值`(即可以`越界`。如果`越界`，`取边界值`)。对 k，要求 `k != 0`，`否则`会`抛出异常`。
+
+  * 当 `k == 0` 时，`S[i:j:k]` 抛出`异常`。
+
+  * 当 `k != 0 且 i == j` 时，`S[i:j:k]` 返回`空序列`。
+
+  * 当 `k > 0(顺序，从左到右取值)` 且 `i 的位置在 j 之前` 或 `k < 0(倒序，从右到左取值)` 且 `i 的位置在 j 之后` 时，`S[i:j:k]` 才`可能`返回`非空序列`。
+
+  * 当 `k > 0` 时，`S[::k]` 等价于 `S[0:L:k]`。
+
+  * 当 `k < 0` 时，`S[::k]` 等价于 `S[-1:-(L+1):k]`。
+
+  * `重点：` `S[i:j:k]` 进行`切片`的`过程`：首先确定 `S[i]` 和 `S[j]` `项`及其在序列中的`位置`，然后按 `k`(`> 0，顺序，从左到右取值`；`< 0，倒序，从右到左取值`) 跨度在 `S` 中`取值`，并将`值`依次`存入`作为`结果`返回的`子序列`中，最后`返回结果`。注意`取值`时，`i` `j` 索引的`大小`关系`不重要`，`位置`关系`很重要`。取值时，脑海中可以首先`想象`出`一条数轴`，然后`标记`出 `i` `j` 索引的`位置`，然后按 `k` 跨度`从 i 向 j` 移动索引的同时在序列上`取值`，最终返回`结果子序列`。
+
+```python
+S[i:j]
+# 等价于
+S[i:j:1]
+S[::2] # S 中具有偶数索引的所有项目组成的子序列
+S[::-1] # S 中的所有项，但顺序相反
+```
+
+```python
+x = [1, 2, 3, 4]
+x[1:3] # [2, 3]
+x[1:] # [2, 3, 4]
+x[:2] # [1, 2]
+```
+
+```python
+y = list(range(10))
+y[-5:] # [5, 6, 7, 8, 9]
+y[::2] # [0, 2, 4, 6, 8]
+y[10:0:-2] # [9, 7, 5, 3, 1]
+y[:0:-2] # [9, 7, 5, 3, 1]
+y[::-2] # [9, 7, 5, 3, 1]
+```
 
 ## 字符串(String)
 
