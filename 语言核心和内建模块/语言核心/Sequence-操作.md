@@ -270,6 +270,12 @@ a *= -1 # [1, 2, 3] => []
 
 * `v3` 的排序方式与 `v2` 的`排序方式一样`。sort 方法的`区别`：在 `v2` 中`不推荐`使用 `cmp 参数`，在 `v3` 中根本`不存在` `cmp 参数`。
 
+```python
+mylist = ['alpha', 'Beta', 'GAMMA']
+mylist.sort() # ['Beta', 'GAMMA', 'alpha']
+mylist.sort(key=str.lower) # ['alpha', 'Beta', 'GAMMA']`
+```
+
 * Python 还提供了内置函数 `sorted`，它可以根据传入的`任何可迭代对象`生成`已排序的列表`。sorted 函数的`第一个参数`为`可迭代对象`，`其他参数`与`列表的排序方法相同`。
 
 * 标准库模块 `operator` 中提供了高阶函数 `attrgetter` 和 `itemgetter`，它们`产生的函数`特别`适合`于`传递`给列表的 `sort 方法`或内置`函数 sorted` 的 `key` 可选参数。对于内置函数 `min` 和 `max` 以及标准库模块 heapq 中 `nsmallest` 和 `nlargest` 函数，也存在相同的 `key` 可选参数，这些 key 可选参数`同样适用上述规则产生的函数`。
