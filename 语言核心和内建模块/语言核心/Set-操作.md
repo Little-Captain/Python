@@ -8,45 +8,73 @@
 
 ## 关系测试
 
-* `k in S` 检查对象 k 是否为 Set S 的项。如果是返回 True，否则返回 False。`k not in S` 等价于 `not (k in S)`。
+* `k in S` 检查对象 `k` `是否为` Set `S` 的`项`。如果`是`返回 `True`，否则返回 False。`k not in S` 等价于 `not (k in S)`。
 
 ## Set 的方法
 
-* Set 对象提供了多种方法如下表所示。不可变方法不改变其应用对象而返回结果(可以在 frozenset 实例上调用)。可变方法可能会更改其应用的对象(只能在 set 实例上调用)。
+* Set 对象提供了多种方法如下表所示。`不可变方法不改变其应用对象`而`返回结果`(`可以`在 `frozenset` 实例上`调用`)。`可变方法可能会更改其应用的对象`(`只能`在 `set` 实例上`调用`)。
 
-* 在下表中，S 表示任何 set 对象，S1 表示拥有可哈希项的可迭代对象(通常但不一定是 set 或 frozenset)，x 表示任何可哈希对象。
+* 在下表中，`S` 表示任何 set 对象，`S1` 表示拥有可哈希项的可迭代对象(通常但不一定是 set 或 frozenset)，`x` 表示任何可哈希对象。
 
 | 方法 | 描述 | 可变性(是否能改变 L) |
 | :-: | :-: | :-: |
 | S.copy() | 返回 S 的`浅拷贝`副本(该副本的`项`与 `S` 的`相同`，而不是其副本)，结果与 `set(S)` 一样 | 不可变 |
 | S.difference(S1) | 返回所有`在 S 中`而`不在 S1 中`的项组成的 `Set` (`差集`) | 不可变 |
-| S.intersection(S1) |  | 不可变 |
-| S.issubset(S1) |  | 不可变 |
-| S.issuperset(S1) |  | 不可变 |
-| S.symmetric_difference(S1) |  | 不可变 |
-| S.union(S1) |  | 不可变 |
-| S.add(x) |  | 可变 |
-| S.clear() |  | 可变 |
-| S.discard(x) |  | 可变 |
-| S.pop() |  | 可变 |
-| S.remove(x) |  | 可变 |
+| S.intersection(S1) | 返回所有`在 S 中`同时也`在 S1 中`的项组成的 `Set` (`交集`) | 不可变 |
+| S.issubset(S1) | 当 `S 中的项`都`在 S1 中`时(`S 是 S1 的子集`)，返回 `True`；`其他`情况返回 `False` (`子集`) | 不可变 |
+| S.issuperset(S1) | 当 `S1 中的项`都`在 S 中`时(`S 是 S1 的超集`)，返回 `True`；`其他`情况返回 `False`，结果与 `S1.issubset(S)` 一样 (`超集`) | 不可变 |
+| S.symmetric_difference(S1) | 返回所有`在 S 中`或`在 S1 中`的项(`不`包括`同时`在 `S` 和 `S1` 中的`项`)组成的 `Set` (`对称差集`) | 不可变 |
+| S.union(S1) | 返回所有`在 S 中`和/或`在 S1 中`的项组成的 `Set` (`并集`) | 不可变 |
+| S.add(x) | 将 `x` 作为`项`添加到 Set `S`； 如果 `x` `已是` `S` 中的`项`，则`没有任何效果` | 可变 |
+| S.clear() | 从 `S` `移除所有项`，将 S `置空` | 可变 |
+| S.discard(x) | `删除` Set `S` 中的`项 x`； 当 `x` `不是` S 的`项`时，则`没有任何效果` | 可变 |
+| S.pop() | `删除`并`返回` S 的`任意项` | 可变 |
+| S.remove(x) | `删除` Set `S` 中的`项 x`； 当 `x` `不是` S 的`项`时，则抛出 `KeyError` 异常 | 可变 |
 
-Returns the set of all items of S that are also in S1
+* 除了 `pop`(`返回删除的项`) 之外，Set 对象的`所有可变方法`均`返回 None`。
 
-Returns True when all items of S are also in S1; otherwise, returns False
+* `pop` 方法可用于 Set 上的`破坏性迭代`(`消耗` Set)，仅`消耗很少`的`额外内存`。当在循环过程中“`消耗`” `Set` 时，可以`节省内存`。这使得 `pop` 可以`应用`在对`庞大 Set` 的`迭代遍历`上。
 
-Returns True when all items of S1 are also in S; otherwise, returns False (like S1.issubset(S))
+```python
+# 破坏性循环
+while S:
+    item = S.pop()
+    ...handle item...
+# 非破坏性循环
+for item in S:
+    ...handle item...
+```
 
-Returns the set of all items that are in either S or S1, but not both
+* 在`破坏性循环`的循环体中，`可以`修改 S (添加和/或删除项)，而在`非破坏性循环`中`不允许`修改 S。
 
-Returns the set of all items that are in S, S1, or both
+* set 还有一些`可变方法`：`difference_update`，`intersection_update`，`symmetric_difference_update` 和 `update(对应于不可变方法 union)`。
 
-Adds x as an item to S; no effect if x was already an item in S
+* 每个这样的`可变`方法都执行与相应的`不可变`方法`相同`的`操作`，但是会`就地执行`该操作，`更改`调用它的 `set 对象`(`frozenset` 没有这些方法)，并`返回 None`。
 
-Removes all items from S, leaving S empty
+* 可以使用`运算符语法`访问`四种`对应的`不可变方法`(其中 `S` `S2` 是 `set` 或 `frozenset`。结果与 `S 一致`)：`S - S2`(`差集`)，`S & S2`(`交集`)，`S ^ S2`(`对称差集`) 和 `S | S2`(`并集`)。
 
-Removes x as an item of S; no effect when x was not an item of S
+```python
+S = frozenset({1, 2, 3})
+S2 = {1, 2}
+S - S2 # frozenset({3})
+S2 = {1, 2, 3, 4}
+S2 - S # {4}
+```
 
-Removes and returns an arbitrary item of S
+* 可以使用`复合赋值语法`访问`四种`对应的`可变方法`(其中 `S` `S2` 是 `set` 或 `frozenset`。`S` 的`类型`保持`不变`)：`S -= S2`(`差集`)，`S &= S2`(`交集`)，`S ^= S2`(`对称差集`) 和 `S |= S2`(`并集`)。
 
-Removes x as an item of S; raises a KeyError exception when x was not an item of S
+```python
+S = frozenset({1, 2, 3})
+S2 = {1, 2}
+S -= S2 # S == frozenset({3})
+S2 = {1, 2, 3, 4}
+S2 -= S # S2 == {1, 2, 4}
+```
+
+* 当使用`运算符语法`或`复合赋值语法`时，两个操作数都必须是 `Set`(set 或 frozenset)。
+
+* `运算符语法`和`复合赋值语法`不限制 `Set` 的类型，也就是 `set` `frozenset` 随便使用。
+
+* `S 运算符(-/&/^/|) S2` 结果`类型`与 `S 一致`；`S 运算符(-/&/^/|)= S2` 赋值后，`S` 的`类型`保持`不变`。
+
+* 当调用`命名方法`时，参数 `S1` 可以是`任何拥有可哈希项的可迭代对象`，就像`传递`的参数是 `set(S1)` `一样`。
